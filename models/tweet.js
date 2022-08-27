@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     description: DataTypes.TEXT
   }, {
     sequelize,
-    modelName: 'tweet',
+    modelName: 'Tweet',
   });
   return tweet;
 };

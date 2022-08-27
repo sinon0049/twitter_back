@@ -40,6 +40,7 @@ module.exports = {
         id: 4,
         email: 'root@example.com',
         password: '12345678',
+        account: 'root',
         name: 'root',
         introduction: 'Hi, I\'m root!',
         role: 'admin',

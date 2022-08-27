@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     TweetId: DataTypes.INTEGER,
   }, {
     sequelize,
-    modelName: 'like',
+    modelName: 'Like',
   });
   return like;
 };
