@@ -3,12 +3,13 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class user extends Model {
+  class User extends Model {
     static associate(models) {
       // define association here
+      User.hasMany(models.Tweet)
     }
   }
-  user.init({
+  User.init({
     email: DataTypes.STRING,
     password: DataTypes.STRING,
     account: DataTypes.STRING,
@@ -20,5 +21,5 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'User',
   });
-  return user;
+  return User;
 };

@@ -3,12 +3,13 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class reply extends Model {
+  class Reply extends Model {
     static associate(models) {
       // define association here
+      Reply.belongsTo(models.Tweet)
     }
   }
-  reply.init({
+  Reply.init({
     UserId: DataTypes.INTEGER,
     TweetId: DataTypes.INTEGER,
     comment: DataTypes.TEXT
@@ -16,5 +17,5 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Reply',
   });
-  return reply;
+  return Reply;
 };
