@@ -1,7 +1,13 @@
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
+const JwtStrategy = require('passport-jwt').Strategy
+const ExtractJwt = require('passport-jwt').ExtractJwt
 const db = require('../models')
 const User = db.User
+const opts = {
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+    secretOrKey: 'secret',
+}
 
 module.exports = (app) => {
     app.use(passport.session())
@@ -13,13 +19,18 @@ module.exports = (app) => {
                 const user = await User.findOne({ where: { account }, raw: true })
                 if(!user) return done(null, false)
                 if(user.password !== password) return done(null, false)
-                console.log(`You are ${user.account}`)
                 return done(null, user)
             } catch (error) {
                 console.log(error)
             }
         }
     ))
+
+    passport.use(new JwtStrategy(opts, async function(payLoad, done) {
+        const user = await User.findByPk(payLoad.userId, { raw: true })
+        if(!user) return done(null, false)
+        return done(null, user)
+    }))
 
     passport.serializeUser(function(user, done) {
         return done(null, user.id)
