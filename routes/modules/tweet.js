@@ -5,7 +5,7 @@ const db = require('../../models')
 const Tweet = db.Tweet
 const User = db.User
 
-router.get('/all', passport.authenticate('jwt'), async (req, res) => {
+router.get('/', passport.authenticate('jwt'), async (req, res) => {
     try {
         const resData = await Tweet.findAll({ 
             include: [
