@@ -2,6 +2,7 @@ const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 const JwtStrategy = require('passport-jwt').Strategy
 const ExtractJwt = require('passport-jwt').ExtractJwt
+const bcrypt = require('bcrypt')
 const db = require('../models')
 const User = db.User
 const opts = {
@@ -18,7 +19,7 @@ module.exports = (app) => {
             try {
                 const user = await User.findOne({ where: { account }, raw: true })
                 if(!user) return done(null, false)
-                if(user.password !== password) return done(null, false)
+                if(!await bcrypt.compare(password, user.password)) return done(null, false)
                 return done(null, user)
             } catch (error) {
                 console.log(error)
