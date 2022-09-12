@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Reply.belongsTo(models.Tweet)
+      Reply.belongsTo(models.User)
     }
   }
   Reply.init({
