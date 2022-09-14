@@ -10,6 +10,11 @@ router.get('/', async (req, res) => {
     res.json(result)
 })
 
+router.get('/current_user', passport.authenticate('jwt'), async (req, res) => {
+    const result = await User.findByPk(req.user.id)
+    res.json(result)
+})
+
 router.post('/signin', express.json(), passport.authenticate('local'), (req, res) => {
     const data = req.user
     const userId  = req.user.id
