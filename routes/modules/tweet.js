@@ -46,4 +46,21 @@ router.get('/:id', passport.authenticate('jwt'), async (req, res) => {
     }
 })
 
+router.post('/', passport.authenticate('jwt'), async (req, res) => {
+    try {
+        const { id } = req.user
+        const { description } = req.body
+        await Tweet.create({
+            UserId: id,
+            description
+        })
+        res.json({
+            status: 'success'
+        })
+    } catch (error) {
+        console.log(error)
+    }
+    
+})
+
 module.exports = router
