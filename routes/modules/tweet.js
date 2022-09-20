@@ -13,7 +13,8 @@ router.get('/', passport.authenticate('jwt'), async (req, res) => {
                 { model: User, attributes: ['id', 'name', 'account', 'avatar']}, 
                 'Replies', 
                 'Likes'
-            ]
+            ],
+            order: [['createdAt', 'DESC']]
         })
         res.json(resData)
     } catch (error) {
