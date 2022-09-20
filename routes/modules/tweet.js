@@ -10,7 +10,7 @@ router.get('/', passport.authenticate('jwt'), async (req, res) => {
     try {
         const resData = await Tweet.findAll({ 
             include: [
-                { model: User, attributes: ['id', 'name', 'account']}, 
+                { model: User, attributes: ['id', 'name', 'account', 'avatar']}, 
                 'Replies', 
                 'Likes'
             ]
