@@ -7,6 +7,12 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       User.hasMany(models.Tweet)
+      User.hasMany(models.Reply)
+      User.belongsToMany(models.Tweet, {
+        through: models.Like,
+        foreignKey: 'userId',
+        as: 'Likes'
+      })
       User.belongsToMany(User, {
         through: models.Followship,
         foreignKey: 'followingId',
@@ -26,7 +32,8 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     avatar: DataTypes.STRING,
     introduction: DataTypes.TEXT,
-    role: DataTypes.STRING
+    role: DataTypes.STRING,
+    cover: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'User',

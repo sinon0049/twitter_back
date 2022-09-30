@@ -22,10 +22,29 @@ router.get('/', passport.authenticate('jwt'), async (req, res) => {
     }
 })
 
+router.get('/user/:id', passport.authenticate('jwt'), async (req, res) => {
+    try {
+        const userId = req.params.id
+        const resData = await Tweet.findAll({
+            where: { userId },
+            include: [
+                { model: User, attributes: ['id', 'name', 'account', 'avatar']}, 
+                'Replies', 
+                'Likes'
+            ],
+            order: [['createdAt', 'DESC']]
+        })
+        res.json(resData)
+    } catch (error) {
+        console.log(error)
+    }
+})
+
 router.get('/:id', passport.authenticate('jwt'), async (req, res) => {
     try {
         const id = req.params.id
         const resData = await Tweet.findByPk(id, {
+            order: [[Reply, 'createdAt', 'DESC']],
             include: [
                 {
                     model: Reply,
@@ -63,5 +82,7 @@ router.post('/', passport.authenticate('jwt'), async (req, res) => {
     }
     
 })
+
+
 
 module.exports = router
