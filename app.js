@@ -5,6 +5,7 @@ const routes = require('./routes')
 const usePassport = require('./config/passport')
 const session = require('express-session')
 const cors = require('cors')
+require('dotenv').config()
 
 app.use(cors())
 app.use(express.json())
