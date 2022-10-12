@@ -3,6 +3,7 @@ const router = express.Router()
 const passport = require('passport')
 const db = require('../../models')
 const User = db.User
+const Followship = db.Followship
 const Sequelize = require('sequelize')
 const { notIn } = Sequelize.Op
 
@@ -20,7 +21,6 @@ router.get('/following/:id', passport.authenticate('jwt'), async (req, res) => {
             ],
         })
         followingList.dataValues.Followings.forEach(item => followingArr.push(item.dataValues.id))
-        console.log(followingArr)
         const unfollowings = await User.findAll({
             attributes: ['id', 'name', 'account', 'avatar', 'cover', 'introduction'],
             where: {
@@ -51,6 +51,43 @@ router.get('/follower/:id', passport.authenticate('jwt'), async (req, res) => {
             ]
         })
         res.json(followerList)
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+router.delete('/following/:id', passport.authenticate('jwt'), async (req, res) => {
+    try {
+        const followingId = req.params.id
+        const followerId = req.user.id
+        const followship = await Followship.findOne({
+            where: {
+                followingId,
+                followerId
+            }
+        })
+        followship.destroy()
+        res.json({
+            status: 'success',
+            message: 'followship successfully deleted'
+        })
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+router.post('/following/:id', passport.authenticate('jwt'), async (req, res) => {
+    try {
+        const followingId = req.params.id
+        const followerId = req.user.id
+        await Followship.create({
+            followerId,
+            followingId
+        })
+        res.json({
+            status: 'success',
+            message: 'followship successfully created'
+        })
     } catch (error) {
         console.log(error)
     }
