@@ -7,7 +7,7 @@ const Followship = db.Followship
 const Sequelize = require('sequelize')
 const { notIn } = Sequelize.Op
 
-router.get('/following/:id', passport.authenticate('jwt'), async (req, res) => {
+router.get('/following/:id', passport.authenticate('user-token'), async (req, res) => {
     try {
         const currentUser = req.params.id
         const followingArr = [Number(currentUser)]
@@ -38,7 +38,7 @@ router.get('/following/:id', passport.authenticate('jwt'), async (req, res) => {
     }
 })
 
-router.get('/follower/:id', passport.authenticate('jwt'), async (req, res) => {
+router.get('/follower/:id', passport.authenticate('user-token'), async (req, res) => {
     try {
         const followerList = await User.findByPk(req.params.id, {
             attributes: ['id', 'name', 'account', 'avatar', 'cover', 'introduction'],
@@ -56,7 +56,7 @@ router.get('/follower/:id', passport.authenticate('jwt'), async (req, res) => {
     }
 })
 
-router.delete('/following/:id', passport.authenticate('jwt'), async (req, res) => {
+router.delete('/following/:id', passport.authenticate('user-token'), async (req, res) => {
     try {
         const followingId = req.params.id
         const followerId = req.user.id
@@ -76,7 +76,7 @@ router.delete('/following/:id', passport.authenticate('jwt'), async (req, res) =
     }
 })
 
-router.post('/following/:id', passport.authenticate('jwt'), async (req, res) => {
+router.post('/following/:id', passport.authenticate('user-token'), async (req, res) => {
     try {
         const followingId = req.params.id
         const followerId = req.user.id

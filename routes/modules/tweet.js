@@ -6,7 +6,7 @@ const Tweet = db.Tweet
 const User = db.User
 const Reply = db.Reply
 
-router.get('/', passport.authenticate('jwt'), async (req, res) => {
+router.get('/', passport.authenticate('user-token'), async (req, res) => {
     try {
         const resData = await Tweet.findAll({ 
             include: [
@@ -22,7 +22,7 @@ router.get('/', passport.authenticate('jwt'), async (req, res) => {
     }
 })
 
-router.get('/user/:id', passport.authenticate('jwt'), async (req, res) => {
+router.get('/user/:id', passport.authenticate('user-token'), async (req, res) => {
     try {
         const userId = req.params.id
         const resData = await Tweet.findAll({
@@ -40,7 +40,7 @@ router.get('/user/:id', passport.authenticate('jwt'), async (req, res) => {
     }
 })
 
-router.get('/:id', passport.authenticate('jwt'), async (req, res) => {
+router.get('/:id', passport.authenticate('user-token'), async (req, res) => {
     try {
         const id = req.params.id
         const resData = await Tweet.findByPk(id, {
@@ -66,7 +66,7 @@ router.get('/:id', passport.authenticate('jwt'), async (req, res) => {
     }
 })
 
-router.post('/', passport.authenticate('jwt'), async (req, res) => {
+router.post('/', passport.authenticate('user-token'), async (req, res) => {
     try {
         const { id } = req.user
         const { description } = req.body

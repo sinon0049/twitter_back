@@ -13,12 +13,13 @@ const opts = {
 module.exports = (app) => {
     app.use(passport.session())
     app.use(passport.initialize())
-    passport.use(new LocalStrategy(
+    passport.use('user-login', new LocalStrategy(
         { usernameField: 'account' }, 
         async function(account, password, done) {
             try {
                 const user = await User.findOne({ where: { account }, raw: true })
                 if(!user) return done(null, false)
+                if(user.role !== 'user') return done(null, false)
                 if(!await bcrypt.compare(password, user.password)) return done(null, false)
                 return done(null, user)
             } catch (error) {
@@ -27,9 +28,10 @@ module.exports = (app) => {
         }
     ))
 
-    passport.use(new JwtStrategy(opts, async function(payLoad, done) {
+    passport.use('user-token', new JwtStrategy(opts, async function(payLoad, done) {
         const user = await User.findByPk(payLoad.userId, { raw: true })
         if(!user) return done(null, false)
+        if(user.role !== 'user') return done(null, false)
         return done(null, user)
     }))
 

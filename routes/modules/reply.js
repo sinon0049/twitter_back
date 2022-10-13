@@ -6,7 +6,7 @@ const Reply = db.Reply
 const User = db.User
 const Tweet = db.Tweet
 
-router.post('/', passport.authenticate('jwt'), async (req, res) => {
+router.post('/', passport.authenticate('user-token'), async (req, res) => {
     const { id } = req.user
     await Reply.create({
         UserId: id,
@@ -17,7 +17,7 @@ router.post('/', passport.authenticate('jwt'), async (req, res) => {
     })
 })
 
-router.get('/user/:id', passport.authenticate('jwt'), async (req, res) => {
+router.get('/user/:id', passport.authenticate('user-token'), async (req, res) => {
     try {
         const userId = req.params.id
         const resData = await Reply.findAll({
