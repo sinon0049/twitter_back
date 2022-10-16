@@ -70,17 +70,18 @@ router.post('/', passport.authenticate('user-token'), async (req, res) => {
     try {
         const { id } = req.user
         const { description } = req.body
-        await Tweet.create({
+        const newTweet = await Tweet.create({
             UserId: id,
             description
         })
         res.json({
-            status: 'success'
+            status: 'success',
+            message: "Tweet created successfully.",
+            tweet: newTweet,
         })
     } catch (error) {
         console.log(error)
     }
-    
 })
 
 

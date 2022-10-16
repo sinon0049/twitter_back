@@ -69,7 +69,7 @@ router.delete('/following/:id', passport.authenticate('user-token'), async (req,
         followship.destroy()
         res.json({
             status: 'success',
-            message: 'followship successfully deleted'
+            message: 'Followship deleted successfully.'
         })
     } catch (error) {
         console.log(error)
@@ -86,7 +86,7 @@ router.post('/following/:id', passport.authenticate('user-token'), async (req, r
         })
         res.json({
             status: 'success',
-            message: 'followship successfully created'
+            message: 'Followship created successfully.'
         })
     } catch (error) {
         console.log(error)

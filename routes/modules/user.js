@@ -74,6 +74,25 @@ router.post('/signup', async(req, res) => {
     })
 })
 
+router.put('/setting', passport.authenticate('user-token'), async (req, res) => {
+    try {
+        const userId = req.user.id
+        const user = await User.findByPk(userId)
+        const salt = await bcrypt.genSalt(10)
+        const hashedPassword = await bcrypt.hash(req.body.password, salt)
+        await user.update({
+            ...req.body,
+            password: hashedPassword
+        })
+        res.json({
+            status: 'success',
+            message: 'User settings updated successfully.'
+        })
+    } catch (error) {
+        console.log(error)
+    }
+})
+
 router.put('/info', passport.authenticate('user-token'), upload.fields([{name: 'cover'}, {name: 'avatar'}]), async (req, res) => {
     try {
         //get name and introduction
