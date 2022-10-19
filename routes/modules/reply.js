@@ -8,12 +8,14 @@ const Tweet = db.Tweet
 
 router.post('/', passport.authenticate('user-token'), async (req, res) => {
     const { id } = req.user
-    await Reply.create({
+    const newReply = await Reply.create({
         UserId: id,
         ...req.body
     })
     res.json({
-        status: 'success'
+        status: 'success',
+        message: 'Reply created successfully.',
+        reply: newReply
     })
 })
 

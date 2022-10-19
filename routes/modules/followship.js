@@ -66,7 +66,7 @@ router.delete('/following/:id', passport.authenticate('user-token'), async (req,
                 followerId
             }
         })
-        followship.destroy()
+        await followship.destroy()
         res.json({
             status: 'success',
             message: 'Followship deleted successfully.'
