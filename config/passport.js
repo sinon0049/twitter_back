@@ -13,7 +13,7 @@ const opts = {
 module.exports = (app) => {
     app.use(passport.session())
     app.use(passport.initialize())
-    passport.use('user-login', new LocalStrategy(
+    passport.use('user-signin', new LocalStrategy(
         { usernameField: 'account' }, 
         async function(account, password, done) {
             try {
@@ -32,6 +32,34 @@ module.exports = (app) => {
         const user = await User.findByPk(payLoad.userId, { raw: true })
         if(!user) return done(null, false)
         if(user.role !== 'user') return done(null, false)
+        return done(null, user)
+    }))
+
+    passport.use('get-current-user', new JwtStrategy(opts, async function(payLoad, done) {
+        const user = await User.findByPk(payLoad.userId, { raw: true })
+        if(!user) return done(null, false)
+        return done(null, user)
+    }))
+
+    passport.use('admin-signin', new LocalStrategy(
+        { usernameField: 'account' }, 
+        async function(account, password, done) {
+            try {
+                const user = await User.findOne({ where: { account }, raw: true })
+                if(!user) return done(null, false)
+                if(user.role !== 'admin') return done(null, false)
+                if(!await bcrypt.compare(password, user.password)) return done(null, false)
+                return done(null, user)
+            } catch (error) {
+                console.log(error)
+            }
+        }
+    ))
+
+    passport.use('admin-token', new JwtStrategy(opts, async function(payLoad, done) {
+        const user = await User.findByPk(payLoad.userId, { raw: true })
+        if(!user) return done(null, false)
+        if(user.role !== 'admin') return done(null, false)
         return done(null, user)
     }))
 

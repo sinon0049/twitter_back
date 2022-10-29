@@ -22,7 +22,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage })
 
 //routes
-router.get('/current_user', passport.authenticate('user-token'), async (req, res) => {
+router.get('/current_user', passport.authenticate('get-current-user'), async (req, res) => {
     try {
         const result = await User.findByPk(req.user.id)
         res.json(result)
@@ -31,7 +31,7 @@ router.get('/current_user', passport.authenticate('user-token'), async (req, res
     }
 })
 
-router.post('/signin', passport.authenticate('user-login'), (req, res) => {
+router.post('/signin', passport.authenticate('user-signin'), (req, res) => {
     try {
         const data = req.user
         const userId  = req.user.id
