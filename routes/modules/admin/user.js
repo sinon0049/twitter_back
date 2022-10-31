@@ -17,4 +17,29 @@ router.post('/signin', passport.authenticate('admin-signin'), async (req, res) =
     })
 })
 
+router.get('/user', passport.authenticate('admin-token'), async (req, res) => {
+    try {
+        const user = await User.findAll({
+            attributes: ['id', 'email', 'account', 'avatar', 'cover', 'name'],
+            include: [
+                {
+                    model: Tweet,
+                    include: ['Likes']
+                },
+                {
+                    model: User,
+                    as: 'Followers'
+                },
+                {
+                    model: User,
+                    as: 'Followings'
+                }
+            ],
+        })
+        res.json(user)
+    } catch (error) {
+        console.log(error)
+    }
+})
+
 module.exports = router
