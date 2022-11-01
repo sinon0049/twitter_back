@@ -98,8 +98,9 @@ router.put('/info', passport.authenticate('user-token'), upload.fields([{name: '
         //get name and introduction
         const { name, introduction } = req.body
         //get file paths
-        const coverPath = req.files.cover[0].path
-        const avatarPath = req.files.avatar[0].path
+        const coverPath = req.files.cover ? req.files.cover[0].path : null
+        const avatarPath = req.files.avatar ? req.files.avatar[0].path : null
+        console.log(coverPath, avatarPath)
         //imgur settings
         const client = new ImgurClient({
             clientId: process.env.IMGUR_CLIENT_ID,
@@ -107,38 +108,49 @@ router.put('/info', passport.authenticate('user-token'), upload.fields([{name: '
             refreshToken: process.env.IMGUR_REFRESH_TOKEN,
             accessToken: process.env.IMGUR_ACCESS_TOKEN,
         })
-        //upload images to imgur
-        const coverRes = await client.upload({
-            image: fs.createReadStream(coverPath),
-            album: process.env.IMGUR_ALBUM_ID
-        })
-        const avatarRes = await client.upload({
-            image: fs.createReadStream(avatarPath),
-            album: process.env.IMGUR_ALBUM_ID
-        })
+        //initialize imgur response
+        let coverRes = null
+        let avatarRes = null
+        //upload images to imgur and delete local images after upload
+        if(coverPath) {
+            coverRes = await client.upload({
+                image: fs.createReadStream(coverPath),
+                album: process.env.IMGUR_ALBUM_ID
+            })
+            fs.unlink(coverPath, (err) => {
+                if(err) throw new Error(err)
+                console.log(`${coverPath} has been deleted`)
+            })
+        }
+        if(avatarPath) {
+            avatarRes = await client.upload({
+                image: fs.createReadStream(avatarPath),
+                album: process.env.IMGUR_ALBUM_ID
+            })
+            fs.unlink(avatarPath, (err) => {
+                if(err) throw new Error(err)
+                console.log(`${avatarPath} has been deleted`)
+            })
+        }
         console.log(coverRes, avatarRes)
         //update database
         const user = await User.findByPk(req.user.id)
-        user.update({
-            avatar: avatarRes.data.link,
-            cover: coverRes.data.link,
+        const payLoad = {
             name,
             introduction
-        })
-        //delete temp files
-        fs.unlink(avatarPath, (err) => {
-            if(err) throw new Error(err)
-            console.log(`${avatarPath} has been deleted`)
-        })
-        fs.unlink(coverPath, (err) => {
-            if(err) throw new Error(err)
-            console.log(`${coverPath} has been deleted`)
-        })
-        //response
+        }
+        //update avatar and cover if user upload new ones
+        if(avatarRes) payLoad.avatar = avatarRes.data.link
+        if(coverRes) payLoad.cover = coverRes.data.link
+        await user.update(payLoad)
+        //respond
         res.json({
-            status: 'user info successfully updated',
-            avatar: avatarRes.data.link,
-            cover: coverRes.data.link
+            status: 'success',
+            message: 'user info successfully updated',
+            avatar: user.avatar,
+            cover: user.cover,
+            name: user.name,
+            introduction: user.introduction
         })
     } catch (error) {
         console.log(error)
