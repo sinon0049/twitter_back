@@ -15,13 +15,13 @@ app.use(session({
     secret: 'secret',
     resave: false,
     saveUninitialized: false,
-    store: new DatastoreStore({
-        kind: 'express-sessions',
-        dataset: new Datastore({
-            projectId: process.env.GCLOUD_PROJECT,
-            keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS
-        })
-    })
+    // store: new DatastoreStore({
+    //     kind: 'express-sessions',
+    //     dataset: new Datastore({
+    //         projectId: process.env.GCLOUD_PROJECT,
+    //         keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS
+    //     })
+    // })
 }))
 usePassport(app)
 app.use(routes)
