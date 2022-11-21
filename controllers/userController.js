@@ -32,32 +32,36 @@ module.exports = {
         }
     },
     signUp: async(req, res) => {
-        console.log(req.body)
-        const listCheckEmail = await User.findAll({where: { email: req.body.email}})
-        const listCheckAccount = await User.findAll({where: { account: req.body.account}})
-        if(listCheckAccount.length) {
-            return res.json({
-                status: 'error',
-                message: 'Account has been already used.'
+        try {
+            console.log(req.body)
+            const listCheckEmail = await User.findAll({where: { email: req.body.email}})
+            const listCheckAccount = await User.findAll({where: { account: req.body.account}})
+            if(listCheckAccount.length) {
+                return res.json({
+                    status: 'error',
+                    message: 'Account has been already used.'
+                })
+            }
+            if(listCheckEmail.length) {   
+                return res.json({
+                    status: 'error',
+                    message: 'Email has been already used.'
+                })
+            }
+            const salt = await bcrypt.genSalt(10)
+            const hashedPassword = await bcrypt.hash(req.body.password, salt)
+            await User.create({
+                ...req.body,
+                password: hashedPassword,
+                role: 'user'
             })
-        }
-        if(listCheckEmail.length) {   
             return res.json({
-                status: 'error',
-                message: 'Email has been already used.'
+                status: 'success',
+                message: 'Sign up successfully'
             })
-        }
-        const salt = await bcrypt.genSalt(10)
-        const hashedPassword = await bcrypt.hash(req.body.password, salt)
-        await User.create({
-            ...req.body,
-            password: hashedPassword,
-            role: 'user'
-        })
-        return res.json({
-            status: 'success',
-            message: 'Sign up successfully'
-        })
+        } catch (error) {
+            console.log(error)
+        }   
     },
     updateSetting: async (req, res) => {
         try {

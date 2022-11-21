@@ -8,16 +8,20 @@ const Tweet = db.Tweet
 
 module.exports = {
     createReply: async (req, res) => {
-        const { id } = req.user
-        const newReply = await Reply.create({
-            UserId: id,
-            ...req.body
-        })
-        res.json({
-            status: 'success',
-            message: 'Reply created successfully.',
-            reply: newReply
-        })
+        try {
+            const { id } = req.user
+            const newReply = await Reply.create({
+                UserId: id,
+                ...req.body
+            })
+            res.json({
+                status: 'success',
+                message: 'Reply created successfully.',
+                reply: newReply
+            })
+        } catch (error) {
+            console.log(error)
+        }
     },
     getReplyOfUser: async (req, res) => {
         try {

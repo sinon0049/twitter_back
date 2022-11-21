@@ -43,18 +43,22 @@ module.exports = {
         }
     },
     getLikeOfUser: async (req, res) => {
-        const userId = req.params.userId
-        const likeList = await User.findByPk(userId, {
-            attributes: ['id', 'name', 'avatar', 'account'],
-            include: [{
-                model: Tweet,
-                as: 'Likes',
-                include: ['Replies', 'Likes', {
-                    model: User,
-                    attributes: ['id', 'name', 'avatar', 'account']
+        try {
+            const userId = req.params.userId
+            const likeList = await User.findByPk(userId, {
+                attributes: ['id', 'name', 'avatar', 'account'],
+                include: [{
+                    model: Tweet,
+                    as: 'Likes',
+                    include: ['Replies', 'Likes', {
+                        model: User,
+                        attributes: ['id', 'name', 'avatar', 'account']
+                    }]
                 }]
-            }]
-        })
-        res.json(likeList)
+            })
+            res.json(likeList)
+        } catch (error) {
+            console.log(error)
+        }
     }
 }
