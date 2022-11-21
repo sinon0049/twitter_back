@@ -242,6 +242,7 @@ router.get('/create_seed', async (req, res) => {
             createdAt: new Date(),
             updatedAt: new Date()
           })
+        return res.json({status: "success", message: "seeder created successfully"})
     } catch (error) {
         console.log(error)
     }
