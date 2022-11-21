@@ -4,8 +4,9 @@ const port = process.env.PORT || 8080
 const routes = require('./routes')
 const usePassport = require('./config/passport')
 const session = require('express-session')
-const { DatastoreStore } = require('@google-cloud/connect-datastore')
-const { Datastore } = require('@google-cloud/datastore')
+//////////  used for google app engine
+// const { DatastoreStore } = require('@google-cloud/connect-datastore')
+// const { Datastore } = require('@google-cloud/datastore')
 const cors = require('cors')
 require('dotenv').config()
 
@@ -15,6 +16,7 @@ app.use(session({
     secret: 'secret',
     resave: false,
     saveUninitialized: false,
+    //////////  used for google app engine
     // store: new DatastoreStore({
     //     kind: 'express-sessions',
     //     dataset: new Datastore({

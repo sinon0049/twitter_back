@@ -17,13 +17,9 @@ const db = {};
 // }
 
 //////////    for remote connection
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
-  dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false
-    }
-  }
+const sequelize = new Sequelize(process.env.RENDER_DBNAME, process.env.RENDER_USER, process.env.PASSWORD, {
+  host: process.env.RENDER_HOST,
+  dialect: "postgres"
 });
 
 fs
@@ -44,8 +40,5 @@ Object.keys(db).forEach(modelName => {
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
-
-//  initialize db
-db.sequelize.sync()
 
 module.exports = db;
