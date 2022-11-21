@@ -19,7 +19,10 @@ const db = {};
 //////////    for remote connection
 const sequelize = new Sequelize(process.env.RENDER_DBNAME, process.env.RENDER_USER, process.env.RENDER_PASSWORD, {
   host: process.env.RENDER_HOST,
-  dialect: "postgres"
+  dialect: "postgres",
+  dialectOptions: {
+    socketPath: process.env.RENDER_SOCKETPATH,
+  }
 });
 
 fs
