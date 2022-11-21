@@ -20,9 +20,7 @@ const db = {};
 const sequelize = new Sequelize(process.env.RENDER_DBNAME, process.env.RENDER_USER, process.env.RENDER_PASSWORD, {
   host: process.env.RENDER_HOST,
   dialect: "postgres",
-  dialectOptions: {
-    socketPath: process.env.RENDER_SOCKETPATH,
-  }
+  port: process.env.RENDER_PORT,
 });
 
 fs
