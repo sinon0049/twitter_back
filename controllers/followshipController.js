@@ -1,6 +1,4 @@
 const express = require('express')
-const router = express.Router()
-const passport = require('passport')
 const db = require('../models')
 const User = db.User
 const Followship = db.Followship
@@ -12,44 +10,58 @@ module.exports = {
         try {
             const currentUser = req.params.id
             const followingArr = [Number(currentUser)]
-            const followingList = await User.findByPk(currentUser, {
-                attributes: ['id', 'name', 'account', 'avatar', 'cover'],
-                include: [
-                    {
-                        attributes: ['id', 'name', 'account', 'avatar', 'cover', 'introduction'],
-                        model: User, as: 'Followings'
-                    }
-                ],
+            const followingList = await Followship.findAll({
+                where: { followerId: req.params.id },
+                order: [['createdAt', 'DESC']],
+                raw: true,
+                nest: true,
+                include: [{
+                    model: User,
+                    attributes: ['id', 'name', 'account', 'avatar', 'cover', 'introduction'],
+                    as: 'Following'
+                }]
             })
-            followingList.dataValues.Followings.forEach(item => followingArr.push(item.dataValues.id))
+            console.log(followingList)
+            followingList.forEach(item => followingArr.push(item.followingId))
             const unfollowings = await User.findAll({
                 attributes: ['id', 'name', 'account', 'avatar', 'cover', 'introduction'],
                 where: {
-                    id: {
-                        [notIn]: followingArr
-                    },
+                    id: { [notIn]: followingArr },
                     role: 'user'
                 },
                 raw: true
             })
-            followingList.dataValues.unfollowings = unfollowings
-            res.json(followingList)
+            res.json({
+                Followings: followingList,
+                Unfollowings: unfollowings
+            })
         } catch (error) {
             console.log(error)
         }
     },
     getFollowerOfUser: async (req, res) => {
         try {
-            const followerList = await User.findByPk(req.params.id, {
-                attributes: ['id', 'name', 'account', 'avatar', 'cover', 'introduction'],
+            // const followerList = await User.findByPk(req.params.id, {
+            //     attributes: ['id', 'name', 'account', 'avatar', 'cover', 'introduction'],
+            //     include: [
+            //         {
+            //             model: User,
+            //             attributes: ['id', 'name', 'account', 'avatar', 'cover', 'introduction'],
+            //             as: 'Followers'
+            //         }
+            //     ]
+            // })
+            // res.json(followerList)
+            const followerList = await Followship.findAll({
+                where: { followingId: req.params.id },
+                order: [['createdAt', 'DESC']],
                 include: [
                     {
                         model: User,
                         attributes: ['id', 'name', 'account', 'avatar', 'cover', 'introduction'],
-                        as: 'Followers'
+                        as: 'Follower'
                     }
-                ]
-            })
+                ]})
             res.json(followerList)
         } catch (error) {
             console.log(error)
@@ -78,13 +90,15 @@ module.exports = {
         try {
             const followingId = req.params.id
             const followerId = req.user.id
-            await Followship.create({
+            const newData = await Followship.create({
                 followerId,
                 followingId
             })
+            console.log(newData)
             res.json({
                 status: 'success',
-                message: 'Followship created successfully.'
+                message: 'Followship created successfully.',
+                newData
             })
         } catch (error) {
             console.log(error)

@@ -1,6 +1,4 @@
 const express = require('express')
-const passport = require('passport')
-const router = express.Router()
 const db = require('../models')
 const User = db.User
 const Tweet = db.Tweet
