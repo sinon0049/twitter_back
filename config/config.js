@@ -2,11 +2,10 @@ require('dotenv').config();
 module.exports = {
     "development": {
         "username": "root",
-        "password": process.env.RENDER_PASSWORD,
-        "database": "test",
-        "host": process.env.RENDER_HOST,
-        "dialect": "postgres",
-        "port": process.env.RENDER_PORT
+        "password": "password",
+        "database": "ac_twitter_workspace",
+        "host": "127.0.0.1",
+        "dialect": "mysql",
       },
       "test": {
         "username": "root",
