@@ -86,7 +86,6 @@ module.exports = {
             //get file paths
             const coverPath = req.files.cover ? req.files.cover[0].path : null
             const avatarPath = req.files.avatar ? req.files.avatar[0].path : null
-            console.log(coverPath, avatarPath)
             //imgur settings
             const client = new ImgurClient({
                 clientId: process.env.IMGUR_CLIENT_ID,
@@ -105,7 +104,6 @@ module.exports = {
                 })
                 fs.unlink(coverPath, (err) => {
                     if(err) throw new Error(err)
-                    console.log(`${coverPath} has been deleted`)
                 })
             }
             if(avatarPath) {
@@ -115,10 +113,8 @@ module.exports = {
                 })
                 fs.unlink(avatarPath, (err) => {
                     if(err) throw new Error(err)
-                    console.log(`${avatarPath} has been deleted`)
                 })
             }
-            console.log(coverRes, avatarRes)
             //update database
             const user = await User.findByPk(req.user.id)
             const payLoad = {

@@ -82,7 +82,6 @@ module.exports = {
                 followerId,
                 followingId
             })
-            console.log(newData)
             res.json({
                 status: 'success',
                 message: 'Followship created successfully.',
