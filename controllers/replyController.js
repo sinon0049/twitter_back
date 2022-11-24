@@ -1,4 +1,3 @@
-const express = require('express')
 const db = require('../models')
 const Reply = db.Reply
 const User = db.User

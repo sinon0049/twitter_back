@@ -1,4 +1,3 @@
-const express = require('express')
 const db = require('../models')
 const User = db.User
 const Tweet = db.Tweet
@@ -31,9 +30,10 @@ module.exports = {
     },
     signUp: async(req, res) => {
         try {
-            console.log(req.body)
-            const listCheckEmail = await User.findAll({where: { email: req.body.email}})
-            const listCheckAccount = await User.findAll({where: { account: req.body.account}})
+            const [listCheckEmail, listCheckAccount] = await Promise.all([
+                User.findAll({where: { email: req.body.email}}),
+                User.findAll({where: { account: req.body.account}})
+            ])
             if(listCheckAccount.length) {
                 return res.json({
                     status: 'error',

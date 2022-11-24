@@ -21,7 +21,6 @@ module.exports = {
                     as: 'Following'
                 }]
             })
-            console.log(followingList)
             followingList.forEach(item => followingArr.push(item.followingId))
             const unfollowings = await User.findAll({
                 attributes: ['id', 'name', 'account', 'avatar', 'cover', 'introduction'],
@@ -41,17 +40,6 @@ module.exports = {
     },
     getFollowerOfUser: async (req, res) => {
         try {
-            // const followerList = await User.findByPk(req.params.id, {
-            //     attributes: ['id', 'name', 'account', 'avatar', 'cover', 'introduction'],
-            //     include: [
-            //         {
-            //             model: User,
-            //             attributes: ['id', 'name', 'account', 'avatar', 'cover', 'introduction'],
-            //             as: 'Followers'
-            //         }
-            //     ]
-            // })
-            // res.json(followerList)
             const followerList = await Followship.findAll({
                 where: { followingId: req.params.id },
                 order: [['createdAt', 'DESC']],
