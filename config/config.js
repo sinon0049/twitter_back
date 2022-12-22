@@ -15,11 +15,10 @@ module.exports = {
         "dialect": "mysql"
       },
       "production": {
-        "username": process.env.FREEDB_USER,
-        "password": process.env.FREEDB_PASSWORD,
-        "database": process.env.FREEDB_DBNAME,
-        "host": process.env.FREEDB_HOST,
+        "username": process.env.DB_USER,
+        "password": process.env.DB_PASSWORD,
+        "database": process.env.DB_DBNAME,
+        "host": process.env.DB_HOST,
         "dialect": "mysql",
-        "port": process.env.FREEDB_PORT
       }
 };  
