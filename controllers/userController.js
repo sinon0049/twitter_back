@@ -51,7 +51,9 @@ module.exports = {
             await User.create({
                 ...req.body,
                 password: hashedPassword,
-                role: 'user'
+                role: 'user',
+                avatar: 'https://i.imgur.com/3koYUBD.jpg',
+                cover: 'https://i.imgur.com/3koYUBD.jpg'
             })
             return res.json({
                 status: 'success',
