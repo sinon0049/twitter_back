@@ -9,7 +9,9 @@ const fs = require('fs')
 module.exports = {
     getCurrentUser: async (req, res) => {
         try {
-            const result = await User.findByPk(req.user.id)
+            const result = await User.findByPk(req.user.id, {
+                attributes: ['id', 'name', 'account', 'avatar', 'cover', 'email', 'introduction', 'role']
+            })
             res.json(result)
         } catch (error) {
             console.log(error)
